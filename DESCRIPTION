@@ -1,0 +1,34 @@
+Package: bayesewi
+Type: Package
+Title: Baysian early warning indicators with Stan
+Version: 0.01.9001
+Date: 2017-09-06
+Authors@R: c(
+    person(c("Eric", "J."), "Ward", role = c("aut", "cre"), email = "a@a.com"),
+    person(c("Sean", "C."), "Anderson", role = "aut"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: GPL (>=3)
+Depends:
+    R (>= 3.3.1),
+    Rcpp (>= 0.11.0),
+    rstan (>= 2.14.0)
+Imports:
+    ggplot2 (>= 2.2.0),
+    loo,
+    dplyr,
+    methods,
+    reshape2
+Suggests:
+    testthat,
+    parallel,
+    knitr,
+    rmarkdown
+LinkingTo: StanHeaders (>= 2.14.0), rstan (>= 2.9.0), BH (>= 1.60.0), Rcpp (>=
+    0.12.0), RcppEigen
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+URL: https://github.com/fate-ewi/bayesewi
+BugReports: https://github.com/fate-ewi/bayesewi/issues
