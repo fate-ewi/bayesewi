@@ -1,6 +1,6 @@
 #' Fit a Bayesian EWI model
 #'
-#' @param data_frame Data frame containing the time covariarte ('x') and response ('y')
+#' @param data_frame Data frame containing the time covariarte ('x') and response ('y') with no NAs
 #' @param model Which model to fit. Either the dynamic AR(1) model ('ar') or model with time varying volatility ('sd'). Defaults to 'ar'.
 #' @param time Whether to fit model with discrete time ('discrete') or continuous time ('continuous'). Defaults to 'discrete'.
 #' @param iter Number of iterations in Stan sampling.

@@ -5,7 +5,8 @@
 \title{Fit a Bayesian EWI model}
 \usage{
 fit_ewi(data_frame, ewi_model = "ar", time = "discrete", iter = 2000,
-  chains = 4, control = list(adapt_delta = 0.9, max_treedepth = 20))
+  chains = 4, control = list(adapt_delta = 0.9, max_treedepth = 20),
+  ar_scale = 0.1)
 }
 \arguments{
 \item{data_frame}{Data frame containing the time covariarte ('x') and response ('y')}

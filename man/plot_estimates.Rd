@@ -4,12 +4,14 @@
 \alias{plot_estimates}
 \title{Plot results from a Bayesian EWI model}
 \usage{
-plot_estimates(fitted, alpha_ci = 0.05)
+plot_estimates(fitted, alpha_ci = 0.05, link_space = FALSE)
 }
 \arguments{
 \item{fitted}{Object returned from fit_ewi}
 
 \item{alpha_ci}{alpha level for credible intervals, defaults to 0.05 = 95% CIs}
+
+\item{link_space}{Whether to plot the parameters in link or normal space. Defaults to FALSE (normal space)}
 }
 \description{
 Plot results from a Bayesian EWI model
@@ -18,6 +20,7 @@ Plot results from a Bayesian EWI model
 \dontrun{
 library(bayesewi)
 model_1 = fit_ewi(data_example, ewi_model="ar", time="continuous")
-print(plot_estimates(model_1, alpha_ci = 0.1))
+print(plot_estimates(model_1, alpha_ci = 0.1)) # make plot in normal space
+print(plot_estimates(model_1, alpha_ci = 0.1, link_space=TRUE)) # make plot in logit space
 }
 }

@@ -8,11 +8,13 @@ data {
 }
 parameters {
   vector[maxt-1] ar_dev; // deviations / process model of ar parameter
+  vector[maxt-1] pro_dev; // deviations / process model of ar parameter
   real<lower=0> ar_sd;
   real<lower=0> CV;
   real ar0;
   real x0;
   real drift;
+  real<lower=0> pro_sigma;
 }
 transformed parameters {
   vector[maxt] ar_logit; // parameter of ar model
@@ -29,7 +31,7 @@ transformed parameters {
     //ar[i] = fmax(fmin(ar[i-1] + ar_dev[i-1], 1), -1);
     ar_logit[i] = ar_logit[i-1] + ar_dev[i-1];
     ar[i] = -1 + 2*exp(ar_logit[i])/(1+exp(ar_logit[i]));
-    states[i] = drift + ar[i] * (states[i-1] - drift);
+    states[i] = drift + ar[i] * (states[i-1] - drift) + pro_dev[i-1];
   }
   for(i in 1:N) {
     pred[i] = states[x[i]];
@@ -41,9 +43,11 @@ model {
   ar_sd ~ normal(0, ar_scale);
   ar_dev ~ normal(0, ar_sd); // process deviations
   drift ~ normal(0, 1);
+  pro_sigma ~ normal(0, 1);
+  pro_dev ~ normal(0, pro_sigma);
 
   if(obs_model == 1) {
-  CV ~ exponential(1);
-  y ~ normal(pred, CV*pred);
+  CV ~ student_t(7, 0, 3);
+  y ~ normal(pred, CV);
   }
 }

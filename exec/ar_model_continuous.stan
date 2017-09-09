@@ -5,14 +5,17 @@ data {
   vector[maxt] x; // difference in time
   int<lower=0> time[N];
   int<lower=1> obs_model; // 1 = normal, 2 gamma, etc
+  real ar_scale; // scale parameter for prior of random walk -- needs to keep logit < 20
 }
 parameters {
   vector[maxt-1] ar_dev; // deviations / process model of ar parameter
   real<lower=0> ar_sd;
-  real<lower=0> sigma_obs;
+  vector[maxt-1] pro_dev; // deviations / process model of ar parameter
+  real<lower=0, upper=3> CV;
   real ar0;
   real x0;
   real drift;
+  real<lower=0> pro_sigma;
 }
 transformed parameters {
   vector[maxt] ar_logit; // parameter of ar model
@@ -41,12 +44,14 @@ transformed parameters {
 model {
   ar0 ~ student_t(3, 0, 2);
   x0 ~ student_t(3, 0, 2);
-  ar_sd ~ student_t(3, 0, 2);
+  ar_sd ~ normal(0, ar_scale);
   drift ~ normal(0, 1);
   ar_dev ~ normal(0, 1); // process deviations
+  pro_sigma ~ normal(0, 1);
+  pro_dev ~ normal(0, pro_sigma);
 
   if(obs_model == 1) {
-  sigma_obs ~ student_t(3, 0, 2);
-  y ~ normal(pred, sigma_obs);
+  CV ~ exponential(1);
+  y ~ normal(pred, CV);
   }
 }
