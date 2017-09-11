@@ -1,7 +1,7 @@
 #' Fit a Bayesian EWI model
 #'
 #' @param data_frame Data frame containing the time covariarte ('x') and response ('y') with no NAs
-#' @param model Which model to fit. Either the dynamic AR(1) model ('ar') or model with time varying volatility ('sd'). Defaults to 'ar'.
+#' @param model Which model to fit. Either the dynamic AR(1) model ('ar') or stochastic volatility model with time varying volatility ('sv'). Defaults to 'ar'.
 #' @param time Whether to fit model with discrete time ('discrete') or continuous time ('continuous'). Defaults to 'discrete'.
 #' @param iter Number of iterations in Stan sampling.
 #' @param chains Number of chains in Stan sampling.
@@ -17,6 +17,7 @@
 #' model_2 = fit_ewi(data_example, ewi_model="ar", time="discrete", iter = 1000, chains=2)
 #'
 #' print(plot_estimates(model_2))
+#' model_3 = fit_ewi(data_example, ewi_model="sv", time="discrete", iter = 2000, chains=3)
 #' }
 fit_ewi <- function(data_frame, ewi_model = "ar", time = "discrete", iter = 2000,
   chains = 4, control = list(adapt_delta = 0.9, max_treedepth = 20), ar_scale = 0.1) {
@@ -56,15 +57,15 @@ fit_ewi <- function(data_frame, ewi_model = "ar", time = "discrete", iter = 2000
       chains = chains,
       control = control)
   }
-  if(ewi_model == "sd" & time == "discrete") {
+  if(ewi_model == "sv" & time == "discrete") {
     # fit ar model
     datalist = list(x = data_frame$x,
       y = data_frame$y,
       N = nrow(data_frame),
       obs_model = 1,
       maxt = max(data_frame$x))
-    pars <- c("ar", "ar_sd", "CV", "ar_logit")
-    mod = stan(file = "exec/sd_model_discrete.stan",
+    pars <- c("log_CV", "states", "sigma_obs", "CV_sd", "drift")
+    mod = stan(file = "exec/sv_model_discrete.stan",
       data = datalist,
       pars = pars,
       iter=iter,

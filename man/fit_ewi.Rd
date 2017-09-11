@@ -9,7 +9,7 @@ fit_ewi(data_frame, ewi_model = "ar", time = "discrete", iter = 2000,
   ar_scale = 0.1)
 }
 \arguments{
-\item{data_frame}{Data frame containing the time covariarte ('x') and response ('y')}
+\item{data_frame}{Data frame containing the time covariarte ('x') and response ('y') with no NAs}
 
 \item{time}{Whether to fit model with discrete time ('discrete') or continuous time ('continuous'). Defaults to 'discrete'.}
 
@@ -19,7 +19,7 @@ fit_ewi(data_frame, ewi_model = "ar", time = "discrete", iter = 2000,
 
 \item{control}{A list of options to pass to Stan sampling.}
 
-\item{model}{Which model to fit. Either the dynamic AR(1) model ('ar') or model with time varying volatility ('sd'). Defaults to 'ar'.}
+\item{model}{Which model to fit. Either the dynamic AR(1) model ('ar') or stochastic volatility model with time varying volatility ('sv'). Defaults to 'ar'.}
 }
 \description{
 Fit a Bayesian EWI model
@@ -31,5 +31,6 @@ model_1 = fit_ewi(data_example, ewi_model="ar", time="continuous")
 model_2 = fit_ewi(data_example, ewi_model="ar", time="discrete", iter = 1000, chains=2)
 
 print(plot_estimates(model_2))
+model_3 = fit_ewi(data_example, ewi_model="sv", time="discrete", iter = 2000, chains=3)
 }
 }

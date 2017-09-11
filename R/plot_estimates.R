@@ -22,11 +22,21 @@ plot_estimates = function(fitted, alpha_ci=0.05, link_space=FALSE) {
   n_t = fitted$data$maxt
 
   if(link_space==FALSE) {
+    if(ewi_model != "sv") {
     pars = pars[startsWith(pars$term, paste0(ewi_model,"[")), ]
     pars_mcmc = extract(fitted$model, pars = ewi_model)[[1]]
+    } else {
+      pars = exp(pars[startsWith(pars$term, "log_CV["), ])
+      pars_mcmc = exp(extract(fitted$model, pars = "log_CV")[[1]])
+    }
   } else {
+    if(ewi_model != "sv") {
     pars = pars[startsWith(pars$term, paste0(ewi_model,"_logit[")), ]
     pars_mcmc = extract(fitted$model, pars = paste0(ewi_model,"_logit"))[[1]]
+    } else {
+      pars = pars[startsWith(pars$term, "log_CV["), ]
+      pars_mcmc = extract(fitted$model, pars = "log_CV")[[1]]
+    }
   }
 
   pars$estimate = apply(pars_mcmc, 2, median)
