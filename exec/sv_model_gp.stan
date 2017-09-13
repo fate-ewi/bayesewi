@@ -52,7 +52,6 @@ model {
   gp_scale ~ student_t(3, 0, 2);
   gp_sigma_sq ~ student_t(3, 0, 2);
   sigma2_mu ~ normal(0, 3);
-  pro_dev ~ normal(0, 1);
   log_sigma2 ~ multi_normal(zeros+sigma2_mu, Sigma);
 
   if(obs_model == 1) {
