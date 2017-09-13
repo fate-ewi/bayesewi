@@ -17,11 +17,11 @@ parameters {
   real ar_mu; // mean ar
   real<lower=0> gp_sigma_sq;
   real<lower=0> gp_scale;
+  real<lower=0> sigma_pro;
 }
 transformed parameters {
   vector[maxt-1] zeros; // mean for cov function
   vector[N] pred; // predictions
-  vector[N] scale; // needed to OU variance
   vector[maxt] scalet;
   cov_matrix[maxt-1] Sigma; // cov matrix for gp of log(sigma2)
   vector[maxt] states;
@@ -42,14 +42,15 @@ transformed parameters {
   for(i in 2:maxt) {
     ar[i] = exp(logit_ar[i-1])/(1 + exp(logit_ar[i-1]));
     // 0 is placeholder for drift
-    states[i] = 0 + exp(-ar[i] * deltat[i]) * (states[i-1] - 0);
+
     scalet[i] = sqrt( (1 - exp(-2*ar[i]*deltat[i]))/ (2*ar[i]));
+
+    states[i] = 0 + exp(-ar[i] * deltat[i]) * (states[i-1] - 0) + pro_dev[i-1] * (scalet[i] * sigma_pro);
+
   }
 
   for(i in 1:N) {
     pred[i] = states[x[i]];
-    // variance is scale2 * obs_sigma2
-    scale[i] = scalet[x[i]];
   }
 }
 model {
@@ -62,9 +63,10 @@ model {
   ar_mu ~ normal(0, 3);
   pro_dev ~ normal(0, 1);
   logit_ar ~ multi_normal(zeros+ar_mu, Sigma);
+  sigma_pro ~ student_t(3, 0, 2);
 
   if(obs_model == 1) {
   sigma_obs ~ student_t(3, 0, 2);
-  y ~ normal(pred, sigma_obs * scale);
+  y ~ normal(pred, sigma_obs);
   }
 }
