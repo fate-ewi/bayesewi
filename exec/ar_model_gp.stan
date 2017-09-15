@@ -10,10 +10,9 @@ data {
 parameters {
   real<lower=0> sigma_obs; // observation variance sigma
   vector[maxt-1] logit_ar; // logit_ar
-  vector[maxt-1] pro_dev;
   real x0; // initial state
-  real ar0; // initial state
-  real drift;
+  // real ar0; // initial state
+  // real drift;
   real ar_mu; // mean ar
   real<lower=0> gp_sigma_sq;
   real<lower=0> gp_scale;
@@ -54,14 +53,12 @@ transformed parameters {
   }
 }
 model {
-  pro_dev ~ normal(0, 1); // process deviations
-  drift ~ normal(0,1);
+  // drift ~ normal(0,1);
   x0 ~ student_t(3, 0, 2);
-  ar0 ~ student_t(3, 0, 2);
+  // ar0 ~ student_t(3, 0, 2);
   gp_scale ~ student_t(3, 0, 2);
   gp_sigma_sq ~ student_t(3, 0, 2);
   ar_mu ~ normal(0, 3);
-  pro_dev ~ normal(0, 1);
   logit_ar ~ multi_normal(zeros+ar_mu, Sigma);
   sigma_pro ~ student_t(3, 0, 2);
 
