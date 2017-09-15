@@ -54,18 +54,30 @@ plot_estimates = function(fitted,
 
   pars$t = seq(1, nrow(pars))
 
+  states_mcmc = extract(fitted$model, pars = "states")[[1]]
+  thresh = apply(states_mcmc, 2, function(x) length(which(x>log(20))) / length(x))
+
   df = data.frame(
     "Time" = fitted$data$uniquet[fitted$data$x],
     "Obs" = fitted$data$y,
+    "Color" = thresh[fitted$data$x],
     "Pred" = apply(extract(fitted$model, pars = "states")[[1]], 2, median)[fitted$data$x]
   )
-  g1 = ggplot(df, aes(Time, Pred)) +
-    geom_line() + geom_point(aes(Time, Obs), col = "red", alpha = 0.5) +
-    xlab("Time") + ylab("Observed and predicted")
 
   df$estimate = pars$estimate[fitted$data$x]
   df$lo = pars$lo[fitted$data$x]
   df$hi = pars$hi[fitted$data$x]
+  df$outlier = pnorm(abs(scale(c(NA, diff(df$estimate)))), 0, 1)
+  df$extreme = ifelse(df$outlier < 0.999, 0, 1)
+
+  g1 = ggplot(df, aes(Time, Pred)) +
+    geom_line() +
+    geom_point(aes(Time, Obs, colour = Color, shape=factor(extreme)), alpha = 0.7) +
+    xlab("Time") + ylab("Observed and predicted") +
+    geom_hline(aes(yintercept=log(20)), col="orange") +
+    scale_colour_gradient(low = "blue", high = "red", limits=c(0,1)) +
+    labs(colour = "Pr(>ln(20))") + theme(legend.position="none")
+
   g2 = ggplot(df, aes(Time, estimate)) +
     geom_ribbon(aes(ymin = lo, ymax = hi), fill = "blue", alpha = 0.4) +
     geom_line(color = "blue") + xlab("Time") + ylab("Estimated parameter")

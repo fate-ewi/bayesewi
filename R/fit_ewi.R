@@ -32,7 +32,7 @@ fit_ewi <- function(data_frame,
     maxt = length(c(0, diff(
       unique(data_frame$x)
     ))),
-    uniquet = unique(data_frame$x) - data_frame$x[1],
+    distmat2 = as.matrix(dist(unique(data_frame$x) - unique(data_frame$x)[1]))^2,
     deltat = c(0, diff(unique(data_frame$x))),
     obs_model = 1
   )

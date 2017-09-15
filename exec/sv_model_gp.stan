@@ -3,7 +3,7 @@ data {
   vector[N] y; // observed data
   int<lower=1> x[N]; // time coordinates of observed data
   int<lower=1> maxt; // time steps
-  vector[maxt] uniquet; // unique coordinates of time steps (x)
+  matrix[maxt, maxt] distmat2; // matrix of squared distances of *unique* time steps
   vector[maxt] deltat; // difference in time for uniquet
   int<lower=1> obs_model; // 1 = normal, 2 gamma, etc
 }
@@ -28,7 +28,7 @@ transformed parameters {
   for(i in 1:(maxt-1)) {
     zeros[i] = 0;
     for(j in 1:(maxt-1)) {
-      Sigma[i,j] = gp_sigma_sq * exp(-(uniquet[i] - uniquet[j])^2 / gp_scale);
+      Sigma[i,j] = gp_sigma_sq * exp(-distmat2[i,j] / gp_scale);
     }
   }
 
