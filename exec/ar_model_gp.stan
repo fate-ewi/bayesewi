@@ -10,6 +10,7 @@ data {
 parameters {
   real<lower=0> sigma_obs; // observation variance sigma
   vector[maxt-1] logit_ar; // logit_ar
+  vector[maxt-1] pro_dev; // deviations
   real x0; // initial state
   // real ar0; // initial state
   // real drift;
@@ -61,6 +62,7 @@ model {
   ar_mu ~ normal(0, 3);
   logit_ar ~ multi_normal(zeros+ar_mu, Sigma);
   sigma_pro ~ student_t(3, 0, 2);
+  pro_dev ~ normal(0, 1);
 
   if(obs_model == 1) {
   sigma_obs ~ student_t(3, 0, 2);

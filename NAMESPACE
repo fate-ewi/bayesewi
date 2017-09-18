@@ -2,6 +2,7 @@
 
 export(fit_ewi)
 export(plot_estimates)
+export(sim_sv)
 import(Rcpp)
 import(ggplot2)
 importFrom(broom,tidy)
