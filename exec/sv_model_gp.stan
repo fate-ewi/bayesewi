@@ -28,7 +28,7 @@ transformed parameters {
   for(i in 1:(maxt-1)) {
     zeros[i] = 0;
     for(j in 1:(maxt-1)) {
-      Sigma[i,j] = gp_sigma_sq * exp(-distmat2[i,j] / gp_scale);
+      Sigma[i,j] = gp_sigma_sq * exp(-gp_scale * distmat2[i,j]);
     }
   }
 
