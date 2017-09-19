@@ -58,7 +58,7 @@ plot_estimates = function(fitted,
   thresh = apply(states_mcmc, 2, function(x) length(which(x>log(20))) / length(x))
 
   df = data.frame(
-    "Time" = fitted$data$uniquet[fitted$data$x],
+    "Time" = cumsum(fitted$data$deltat)[fitted$data$x],
     "Obs" = fitted$data$y,
     "Color" = thresh[fitted$data$x],
     "Pred" = apply(extract(fitted$model, pars = "states")[[1]], 2, median)[fitted$data$x]
