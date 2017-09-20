@@ -19,3 +19,9 @@ for(i in unique(da_data$example)) {
 }
 saveRDS(models, file="fitted_ar_models.rds")
 
+
+pdf("DA_ewi_ar.pdf")
+for(i in unique(da_data$example)) {
+  plot_estimates(models[[i]], alpha = 0.05, link_space=TRUE)
+}
+dev.off()
