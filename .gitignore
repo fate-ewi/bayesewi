@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rapp.history
+fitted_ar_models.rds
